@@ -50,3 +50,4 @@ export function SectionWrapper({ id, children, className = "" }: SectionWrapperP
     </section>
   );
 }
+
