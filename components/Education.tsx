@@ -10,7 +10,7 @@ export function Education() {
   const { education } = portfolioData;
 
   return (
-    <section id="education" className="relative py-28 px-4 sm:px-6 z-10">
+    <div className="relative py-20 px-4 sm:px-6 z-10">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -125,7 +125,7 @@ export function Education() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

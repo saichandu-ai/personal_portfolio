@@ -6,14 +6,12 @@ import * as THREE from "three";
 import { useScene } from "./SceneContext";
 
 export function GlassSphereHero() {
-  const { activeSection, hoveredSection, mousePosition, isMobile } = useScene();
+  const { effectiveSection, mousePosition, isMobile } = useScene();
   const groupRef = useRef<THREE.Group>(null);
   const sphereRef = useRef<THREE.Mesh>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const ring3Ref = useRef<THREE.Mesh>(null);
-
-  const isHomeHovered = hoveredSection === "home" || (isMobile && activeSection === "home");
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
@@ -29,63 +27,63 @@ export function GlassSphereHero() {
     let targetScale = 1;
     let targetOpacity = 1;
 
-    switch (activeSection) {
+    switch (effectiveSection) {
       case "home":
         targetX = mousePosition.x * 0.45;
         targetY = mousePosition.y * 0.35;
-        targetZ = isHomeHovered ? 0.3 : 0;
-        targetScale = (isMobile ? 0.75 : 1.1) * (isHomeHovered ? 1.08 : 1);
+        targetZ = 0;
+        targetScale = isMobile ? 0.8 : 1.15;
         targetOpacity = 1;
         break;
       case "about":
-        // Shift to the right background as an abstract ambient orb
-        targetX = isMobile ? 0 : 2.5 + mousePosition.x * 0.2;
-        targetY = 0.2 + mousePosition.y * 0.2;
-        targetZ = -2;
-        targetScale = 0.55;
-        targetOpacity = 0.6;
+        // Moves far right background as ambient accent
+        targetX = isMobile ? 2.5 : 3.8 + mousePosition.x * 0.2;
+        targetY = 1.0 + mousePosition.y * 0.2;
+        targetZ = -4.5;
+        targetScale = 0.4;
+        targetOpacity = 0.35;
         break;
       case "education":
-        targetX = -2.6 + mousePosition.x * 0.2;
-        targetY = -0.4 + mousePosition.y * 0.2;
-        targetZ = -3.5;
-        targetScale = 0.45;
-        targetOpacity = 0.45;
+        targetX = -3.8 + mousePosition.x * 0.2;
+        targetY = -1.2;
+        targetZ = -5.0;
+        targetScale = 0.35;
+        targetOpacity = 0.25;
         break;
       case "skills":
-        targetX = 2.4 + mousePosition.x * 0.2;
-        targetY = -0.5 + mousePosition.y * 0.2;
-        targetZ = -3.2;
-        targetScale = 0.5;
-        targetOpacity = 0.4;
+        targetX = 3.6 + mousePosition.x * 0.2;
+        targetY = -1.5;
+        targetZ = -5.0;
+        targetScale = 0.3;
+        targetOpacity = 0.2;
         break;
       case "projects":
-        targetX = -2.8 + mousePosition.x * 0.15;
-        targetY = 0.5 + mousePosition.y * 0.15;
-        targetZ = -3;
-        targetScale = 0.6;
-        targetOpacity = 0.5;
+        targetX = -4.0 + mousePosition.x * 0.15;
+        targetY = 1.8;
+        targetZ = -5.5;
+        targetScale = 0.35;
+        targetOpacity = 0.25;
         break;
       case "certifications":
-        targetX = 2.6 + mousePosition.x * 0.15;
-        targetY = 0.3;
-        targetZ = -4;
-        targetScale = 0.45;
-        targetOpacity = 0.35;
+        targetX = 3.8;
+        targetY = 1.2;
+        targetZ = -5.5;
+        targetScale = 0.3;
+        targetOpacity = 0.2;
         break;
       case "journey":
         targetX = 0;
-        targetY = 2;
-        targetZ = -4.5;
-        targetScale = 0.35;
-        targetOpacity = 0.3;
+        targetY = 3.5;
+        targetZ = -6.0;
+        targetScale = 0.25;
+        targetOpacity = 0.15;
         break;
       case "contact":
         targetX = mousePosition.x * 0.3;
-        targetY = -1.2 + mousePosition.y * 0.2;
-        targetZ = -2.5;
-        targetScale = 0.6;
-        targetOpacity = 0.5;
+        targetY = -2.2;
+        targetZ = -4.0;
+        targetScale = 0.55;
+        targetOpacity = 0.45;
         break;
     }
 
@@ -132,10 +130,10 @@ export function GlassSphereHero() {
         <sphereGeometry args={[1.5, 48, 48]} />
         <meshPhysicalMaterial
           color="#0B1C14"
-          emissive="#003D29"
-          emissiveIntensity={0.35}
+          emissive="#00E6A0"
+          emissiveIntensity={0.4}
           roughness={0.12}
-          metalness={0.1}
+          metalness={0.2}
           transmission={0.88}
           ior={1.45}
           transparent={true}
@@ -152,7 +150,7 @@ export function GlassSphereHero() {
         <meshBasicMaterial
           color="#00E6A0"
           transparent={true}
-          opacity={0.35}
+          opacity={0.4}
           wireframe={true}
         />
       </mesh>
@@ -163,11 +161,11 @@ export function GlassSphereHero() {
         <meshStandardMaterial
           color="#8BFFD5"
           emissive="#00E6A0"
-          emissiveIntensity={0.6}
+          emissiveIntensity={0.7}
           roughness={0.2}
           metalness={0.8}
           transparent={true}
-          opacity={0.75}
+          opacity={0.8}
         />
       </mesh>
 
@@ -176,11 +174,11 @@ export function GlassSphereHero() {
         <meshStandardMaterial
           color="#00E6A0"
           emissive="#087F5B"
-          emissiveIntensity={0.5}
+          emissiveIntensity={0.6}
           roughness={0.2}
           metalness={0.9}
           transparent={true}
-          opacity={0.6}
+          opacity={0.7}
         />
       </mesh>
 
@@ -189,14 +187,13 @@ export function GlassSphereHero() {
         <meshStandardMaterial
           color="#A7B5AD"
           emissive="#00E6A0"
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.4}
           roughness={0.3}
           metalness={0.7}
           transparent={true}
-          opacity={0.4}
+          opacity={0.5}
         />
       </mesh>
     </group>
   );
 }
-

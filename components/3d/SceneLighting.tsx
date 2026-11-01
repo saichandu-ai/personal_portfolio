@@ -6,14 +6,14 @@ import * as THREE from "three";
 import { useScene } from "./SceneContext";
 
 export function SceneLighting() {
-  const { mousePosition, activeSection, hoveredSection, isMobile } = useScene();
+  const { mousePosition, effectiveSection } = useScene();
   const cursorLightRef = useRef<THREE.PointLight>(null);
   const secondaryLightRef = useRef<THREE.PointLight>(null);
   const ambientLightRef = useRef<THREE.AmbientLight>(null);
   const directionalLightRef = useRef<THREE.DirectionalLight>(null);
 
-  // Section currently focused (hovered section or fallback on mobile to activeSection)
-  const currentHover = hoveredSection ?? (isMobile ? activeSection : null);
+  // Section currently driving the 3D lighting (hovered section overrides active scrolled section)
+  const currentSection = effectiveSection;
 
   useFrame(({ clock }, delta) => {
     const time = clock.getElapsedTime();
@@ -27,43 +27,43 @@ export function SceneLighting() {
       let lightColorHex = "#00E6A0";
 
       // Base active section intensity
-      if (activeSection === "home") targetIntensity = 36;
-      if (activeSection === "contact") targetIntensity = 22;
+      if (currentSection === "home") targetIntensity = 36;
+      if (currentSection === "contact") targetIntensity = 22;
 
-      // Section-specific hover lighting transformations
-      if (currentHover === "about") {
+      // Section-specific lighting transformations
+      if (currentSection === "about") {
         // Emerald lighting becomes more prominent
         targetIntensity = 54;
         lightColorHex = "#00FFB2";
         targetZ = 2.8;
-      } else if (currentHover === "education") {
+      } else if (currentSection === "education") {
         // Soft focus repositioned toward timeline geometries
         targetIntensity = 42;
         targetX = mousePosition.x * 3 + 1.2;
         targetZ = 2.2;
         lightColorHex = "#00E6A0";
-      } else if (currentHover === "skills") {
+      } else if (currentSection === "skills") {
         // Dynamic pulsating emerald energy
         targetIntensity = 44 + Math.sin(time * 3) * 8;
         lightColorHex = "#5CFFCC";
         targetZ = 2.4;
-      } else if (currentHover === "projects") {
+      } else if (currentSection === "projects") {
         // Cinematic emerald light trails & depth effect
         targetIntensity = 48;
         targetZ = 3.2;
         lightColorHex = "#00E6A0";
-      } else if (currentHover === "certifications") {
+      } else if (currentSection === "certifications") {
         // Refined floating illumination
         targetIntensity = 38;
         targetZ = 2.2;
         lightColorHex = "#8BFFD5";
-      } else if (currentHover === "journey") {
+      } else if (currentSection === "journey") {
         // Progressive moving beam
         targetIntensity = 46;
         targetX = Math.sin(time * 1.5) * 2.5;
         targetZ = 2.6;
         lightColorHex = "#00E6A0";
-      } else if (currentHover === "contact") {
+      } else if (currentSection === "contact") {
         // Premium finishing atmosphere (calm, deep, elegant emerald)
         targetIntensity = 32;
         targetZ = 2.0;
@@ -101,11 +101,11 @@ export function SceneLighting() {
     }
 
     if (secondaryLightRef.current) {
-      // Counter-balance light reacts to hover
+      // Counter-balance light reacts to section
       let secTargetIntensity = 14;
-      if (currentHover === "skills") secTargetIntensity = 22;
-      if (currentHover === "projects") secTargetIntensity = 26;
-      if (currentHover === "contact") secTargetIntensity = 10;
+      if (currentSection === "skills") secTargetIntensity = 22;
+      if (currentSection === "projects") secTargetIntensity = 26;
+      if (currentSection === "contact") secTargetIntensity = 10;
 
       secondaryLightRef.current.position.x = -mousePosition.x * 2.5;
       secondaryLightRef.current.position.y = -mousePosition.y * 2.5;
@@ -119,8 +119,8 @@ export function SceneLighting() {
 
     if (ambientLightRef.current) {
       let ambientTarget = 1.8;
-      if (currentHover === "about") ambientTarget = 2.4;
-      if (currentHover === "contact") ambientTarget = 1.5;
+      if (currentSection === "about") ambientTarget = 2.4;
+      if (currentSection === "contact") ambientTarget = 1.5;
 
       ambientLightRef.current.intensity = THREE.MathUtils.damp(
         ambientLightRef.current.intensity,
@@ -132,8 +132,8 @@ export function SceneLighting() {
 
     if (directionalLightRef.current) {
       let dirTarget = 2.5;
-      if (currentHover === "projects") dirTarget = 4.2; // Dramatic rim reflections on crystals
-      if (currentHover === "skills") dirTarget = 3.2;
+      if (currentSection === "projects") dirTarget = 4.2; // Dramatic rim reflections on crystals
+      if (currentSection === "skills") dirTarget = 3.2;
 
       directionalLightRef.current.intensity = THREE.MathUtils.damp(
         directionalLightRef.current.intensity,

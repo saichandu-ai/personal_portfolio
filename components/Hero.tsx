@@ -7,9 +7,11 @@ import { portfolioData } from "@/data/portfolio";
 import { MagneticButton } from "./ui/MagneticButton";
 import { SocialGroup } from "./ui/BrandIcons";
 import { Modal } from "./ui/Modal";
+import { useScene, SectionId } from "./3d/SceneContext";
 
 export function Hero() {
   const { personal } = portfolioData;
+  const { navigateToSection } = useScene();
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
 
   const handleResumeClick = () => {
@@ -21,15 +23,11 @@ export function Hero() {
   };
 
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    navigateToSection(id as SectionId);
   };
 
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-28 pb-16 z-10"
-    >
+    <div className="relative min-h-[calc(100vh-6rem)] flex flex-col items-center justify-center px-4 sm:px-6 pt-20 pb-16 z-10">
       <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
         {/* Futuristic Status Badge */}
         <motion.div
@@ -231,7 +229,7 @@ export function Hero() {
           </div>
         </div>
       </Modal>
-    </section>
+    </div>
   );
 }
 

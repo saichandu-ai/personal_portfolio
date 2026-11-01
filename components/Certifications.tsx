@@ -21,7 +21,7 @@ export function Certifications() {
   };
 
   return (
-    <section id="certifications" className="relative py-28 px-4 sm:px-6 z-10">
+    <div className="relative py-20 px-4 sm:px-6 z-10">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -154,7 +154,7 @@ export function Certifications() {
           </div>
         </Modal>
       )}
-    </section>
+    </div>
   );
 }
 

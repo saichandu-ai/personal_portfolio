@@ -6,11 +6,11 @@ import * as THREE from "three";
 import { useScene } from "./SceneContext";
 
 export function ParticleField() {
-  const { isMobile, mousePosition, activeSection, hoveredSection } = useScene();
+  const { isMobile, mousePosition, effectiveSection } = useScene();
   const pointsRef = useRef<THREE.Points>(null);
 
   const count = isMobile ? 180 : 380;
-  const currentHover = hoveredSection ?? (isMobile ? activeSection : null);
+  const currentSection = effectiveSection;
 
   const [positions, colors, originalPositions] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -59,23 +59,23 @@ export function ParticleField() {
     let verticalFlow = 0;
     let progressiveFlow = 0;
 
-    if (currentHover === "skills") {
+    if (currentSection === "skills") {
       // Emerald particles become slightly more active
       speedMult = 2.2;
       waveMult = 1.6;
-    } else if (currentHover === "education") {
+    } else if (currentSection === "education") {
       // Subtle flowing effect along timeline
       speedMult = 1.4;
       verticalFlow = 0.6;
-    } else if (currentHover === "projects") {
+    } else if (currentSection === "projects") {
       // Subtle light trails & depth effect
       speedMult = 1.3;
       waveMult = 1.3;
-    } else if (currentHover === "journey") {
+    } else if (currentSection === "journey") {
       // Progressive forward-moving motion
       speedMult = 1.8;
       progressiveFlow = 0.8;
-    } else if (currentHover === "contact") {
+    } else if (currentSection === "contact") {
       // Calm, elegant atmosphere
       speedMult = 0.6;
       waveMult = 0.7;
@@ -122,10 +122,10 @@ export function ParticleField() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={currentHover === "projects" ? 0.08 : 0.065}
+        size={currentSection === "projects" ? 0.08 : 0.065}
         vertexColors
         transparent
-        opacity={currentHover === "about" || currentHover === "skills" ? 0.95 : 0.8}
+        opacity={currentSection === "about" || currentSection === "skills" ? 0.95 : 0.8}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
         sizeAttenuation

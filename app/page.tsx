@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { SceneProvider } from "@/components/3d/SceneContext";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navbar } from "@/components/Navbar";
+import { SectionWrapper } from "@/components/SectionWrapper";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
 import { Education } from "@/components/Education";
@@ -36,14 +37,30 @@ export default function Home() {
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-1">
-          <Hero />
-          <About />
-          <Education />
-          <Skills />
-          <Projects />
-          <Certifications />
-          <Journey />
-          <Contact />
+          <SectionWrapper id="home">
+            <Hero />
+          </SectionWrapper>
+          <SectionWrapper id="about">
+            <About />
+          </SectionWrapper>
+          <SectionWrapper id="education">
+            <Education />
+          </SectionWrapper>
+          <SectionWrapper id="skills">
+            <Skills />
+          </SectionWrapper>
+          <SectionWrapper id="projects">
+            <Projects />
+          </SectionWrapper>
+          <SectionWrapper id="certifications">
+            <Certifications />
+          </SectionWrapper>
+          <SectionWrapper id="journey">
+            <Journey />
+          </SectionWrapper>
+          <SectionWrapper id="contact">
+            <Contact />
+          </SectionWrapper>
         </main>
         <Footer />
       </div>
