@@ -7,9 +7,11 @@ import { portfolioData } from "@/data/portfolio";
 import { MagneticButton } from "./ui/MagneticButton";
 import { SocialGroup } from "./ui/BrandIcons";
 import { Modal } from "./ui/Modal";
+import { useScene, SectionId } from "./3d/SceneContext";
 
 export function Hero() {
   const { personal } = portfolioData;
+  const { navigateToSection } = useScene();
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
 
   const handleResumeClick = () => {
@@ -21,8 +23,7 @@ export function Hero() {
   };
 
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    navigateToSection(id as SectionId);
   };
 
   return (
