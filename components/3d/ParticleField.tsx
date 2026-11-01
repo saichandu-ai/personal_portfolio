@@ -6,10 +6,11 @@ import * as THREE from "three";
 import { useScene } from "./SceneContext";
 
 export function ParticleField() {
-  const { isMobile, mousePosition } = useScene();
+  const { isMobile, mousePosition, activeSection, hoveredSection } = useScene();
   const pointsRef = useRef<THREE.Points>(null);
 
   const count = isMobile ? 180 : 380;
+  const currentHover = hoveredSection ?? (isMobile ? activeSection : null);
 
   const [positions, colors, originalPositions] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -21,7 +22,6 @@ export function ParticleField() {
     const deepColor = new THREE.Color("#087F5B");
 
     for (let i = 0; i < count; i++) {
-      // Spread across a cylindrical volume
       const radius = 3 + Math.random() * 8;
       const theta = Math.random() * Math.PI * 2;
       const y = (Math.random() - 0.5) * 16;
@@ -36,7 +36,6 @@ export function ParticleField() {
       orig[i * 3 + 1] = y;
       orig[i * 3 + 2] = z;
 
-      // Color variation: 60% emerald, 25% mint, 15% deep emerald
       const rand = Math.random();
       const chosenColor = rand > 0.4 ? emeraldColor : rand > 0.15 ? mintColor : deepColor;
 
@@ -54,28 +53,60 @@ export function ParticleField() {
     const posAttr = geom.attributes.position as THREE.BufferAttribute;
     const time = clock.getElapsedTime();
 
-    // Subtle continuous wave & mouse repulsion
+    // Section-specific dynamic particle speed and flow factors
+    let speedMult = 1.0;
+    let waveMult = 1.0;
+    let verticalFlow = 0;
+    let progressiveFlow = 0;
+
+    if (currentHover === "skills") {
+      // Emerald particles become slightly more active
+      speedMult = 2.2;
+      waveMult = 1.6;
+    } else if (currentHover === "education") {
+      // Subtle flowing effect along timeline
+      speedMult = 1.4;
+      verticalFlow = 0.6;
+    } else if (currentHover === "projects") {
+      // Subtle light trails & depth effect
+      speedMult = 1.3;
+      waveMult = 1.3;
+    } else if (currentHover === "journey") {
+      // Progressive forward-moving motion
+      speedMult = 1.8;
+      progressiveFlow = 0.8;
+    } else if (currentHover === "contact") {
+      // Calm, elegant atmosphere
+      speedMult = 0.6;
+      waveMult = 0.7;
+    }
+
+    const mouseInfluenceX = mousePosition.x * 0.4;
+    const mouseInfluenceY = mousePosition.y * 0.4;
+
     for (let i = 0; i < count; i++) {
       const idx = i * 3;
       const origX = originalPositions[idx];
       const origY = originalPositions[idx + 1];
       const origZ = originalPositions[idx + 2];
 
-      // Wave displacement
-      const waveY = Math.sin(time * 0.4 + origX * 0.5) * 0.25;
-      const waveX = Math.cos(time * 0.3 + origY * 0.5) * 0.2;
+      // Base wave displacement
+      const waveY = Math.sin(time * 0.4 * speedMult + origX * 0.5) * 0.25 * waveMult;
+      const waveX = Math.cos(time * 0.3 * speedMult + origY * 0.5) * 0.2 * waveMult;
 
-      // Gentle mouse interaction
-      const mouseInfluenceX = mousePosition.x * 0.4;
-      const mouseInfluenceY = mousePosition.y * 0.4;
+      // Vertical flow for Education
+      const vFlowOffset = verticalFlow * Math.sin(time * 1.5 + origX) * 0.5;
 
-      posAttr.array[idx] = origX + waveX + mouseInfluenceX * 0.2;
-      posAttr.array[idx + 1] = origY + waveY + mouseInfluenceY * 0.2;
-      posAttr.array[idx + 2] = origZ + Math.sin(time * 0.2 + i) * 0.15;
+      // Progressive forward wave for Journey
+      const pFlowOffset = progressiveFlow * Math.cos(time * 1.8 + origY * 0.4) * 0.7;
+
+      posAttr.array[idx] = origX + waveX + mouseInfluenceX * 0.2 + pFlowOffset;
+      posAttr.array[idx + 1] = origY + waveY + mouseInfluenceY * 0.2 + vFlowOffset;
+      posAttr.array[idx + 2] = origZ + Math.sin(time * 0.25 * speedMult + i) * 0.2;
     }
 
     posAttr.needsUpdate = true;
-    pointsRef.current.rotation.y += delta * 0.03;
+    pointsRef.current.rotation.y += delta * 0.03 * speedMult;
   });
 
   return (
@@ -91,10 +122,10 @@ export function ParticleField() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.065}
+        size={currentHover === "projects" ? 0.08 : 0.065}
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={currentHover === "about" || currentHover === "skills" ? 0.95 : 0.8}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
         sizeAttenuation
@@ -102,4 +133,3 @@ export function ParticleField() {
     </points>
   );
 }
-

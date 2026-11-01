@@ -6,12 +6,14 @@ import * as THREE from "three";
 import { useScene } from "./SceneContext";
 
 export function GlassSphereHero() {
-  const { activeSection, mousePosition, isMobile } = useScene();
+  const { activeSection, hoveredSection, mousePosition, isMobile } = useScene();
   const groupRef = useRef<THREE.Group>(null);
   const sphereRef = useRef<THREE.Mesh>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const ring3Ref = useRef<THREE.Mesh>(null);
+
+  const isHomeHovered = hoveredSection === "home" || (isMobile && activeSection === "home");
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
@@ -31,8 +33,8 @@ export function GlassSphereHero() {
       case "home":
         targetX = mousePosition.x * 0.45;
         targetY = mousePosition.y * 0.35;
-        targetZ = 0;
-        targetScale = isMobile ? 0.75 : 1.1;
+        targetZ = isHomeHovered ? 0.3 : 0;
+        targetScale = (isMobile ? 0.75 : 1.1) * (isHomeHovered ? 1.08 : 1);
         targetOpacity = 1;
         break;
       case "about":

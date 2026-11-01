@@ -26,6 +26,8 @@ export const SECTION_ORDER: SectionId[] = [
 interface SceneContextValue {
   activeSection: SectionId;
   setActiveSection: (section: SectionId) => void;
+  hoveredSection: SectionId | null;
+  setHoveredSection: (section: SectionId | null) => void;
   direction: number; // 1 for forward, -1 for backward
   navigateToSection: (section: SectionId, explicitDirection?: number) => void;
   goToNextSection: () => void;
@@ -42,6 +44,8 @@ interface SceneContextValue {
 const SceneContext = createContext<SceneContextValue>({
   activeSection: "home",
   setActiveSection: () => {},
+  hoveredSection: null,
+  setHoveredSection: () => {},
   direction: 1,
   navigateToSection: () => {},
   goToNextSection: () => {},
@@ -57,6 +61,7 @@ const SceneContext = createContext<SceneContextValue>({
 
 export function SceneProvider({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSectionState] = useState<SectionId>("home");
+  const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [direction, setDirection] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -173,7 +178,6 @@ export function SceneProvider({ children }: { children: React.ReactNode }) {
 
     // Keyboard navigation (ArrowLeft / ArrowRight / PageUp / PageDown)
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if user is typing in form inputs or modals
       const target = e.target as HTMLElement | null;
       if (
         target &&
@@ -218,6 +222,8 @@ export function SceneProvider({ children }: { children: React.ReactNode }) {
       value={{
         activeSection,
         setActiveSection,
+        hoveredSection,
+        setHoveredSection,
         direction,
         navigateToSection,
         goToNextSection,

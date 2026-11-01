@@ -37,7 +37,7 @@ function renderSection(section: SectionId) {
 }
 
 export function SectionTransitionView() {
-  const { activeSection, direction, prefersReducedMotion } = useScene();
+  const { activeSection, direction, prefersReducedMotion, setHoveredSection } = useScene();
 
   return (
     <div className="relative w-full flex-1 flex flex-col justify-start overflow-x-hidden min-h-[calc(100vh-160px)] px-2 sm:px-4 md:px-6">
@@ -51,8 +51,12 @@ export function SectionTransitionView() {
           exit="exit"
           className="w-full flex-1 flex flex-col justify-start"
         >
-          {/* Subtle Premium Section Hover Pop-Up & Emerald Glow Wrapper */}
-          <div className="section-hover-pop w-full flex-1 flex flex-col justify-start">
+          {/* Subtle Premium Section Hover Pop-Up & 3D Interactive Transformation Trigger */}
+          <div
+            onMouseEnter={() => setHoveredSection(activeSection)}
+            onMouseLeave={() => setHoveredSection(null)}
+            className="section-hover-pop w-full flex-1 flex flex-col justify-start"
+          >
             {renderSection(activeSection)}
           </div>
         </motion.div>
@@ -60,4 +64,3 @@ export function SectionTransitionView() {
     </div>
   );
 }
-
