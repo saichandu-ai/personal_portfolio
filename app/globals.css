@@ -1,26 +1,164 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-obsidian: #050706;
+    --bg-obsidian-card: #0B100D;
+    --bg-obsidian-deep: #111A15;
+    --accent-emerald: #00E6A0;
+    --accent-mint: #8BFFD5;
+    --accent-deep-emerald: #087F5B;
+    --text-primary: #F5FFF9;
+    --text-secondary: #A7B5AD;
+    --glass-bg: rgba(255, 255, 255, 0.045);
+    --glass-border: rgba(0, 230, 160, 0.20);
+  }
+
+  * {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-obsidian);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    selection-background-color: var(--accent-emerald);
+    selection-color: var(--bg-obsidian);
+  }
+
+  ::selection {
+    background-color: #00E6A0;
+    color: #050706;
+  }
+
+  /* Custom Smooth Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050706;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 230, 160, 0.25);
+    border-radius: 9999px;
+    border: 2px solid #050706;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 230, 160, 0.5);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Glassmorphism Classes */
+.glass-surface {
+  background: rgba(11, 16, 13, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 230, 160, 0.18);
+}
+
+.glass-surface-subtle {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 230, 160, 0.12);
+}
+
+.glass-card {
+  background: rgba(11, 16, 13, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 230, 160, 0.18);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 230, 160, 0.45);
+  box-shadow: 0 15px 40px -10px rgba(0, 230, 160, 0.18), inset 0 1px 0 0 rgba(139, 255, 213, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-pill {
+  background: rgba(11, 16, 13, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 230, 160, 0.22);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Emerald Text Gradients */
+.text-gradient-emerald {
+  background: linear-gradient(135deg, #F5FFF9 0%, #8BFFD5 50%, #00E6A0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-mint {
+  background: linear-gradient(135deg, #8BFFD5 0%, #00E6A0 60%, #087F5B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-subtle {
+  background: linear-gradient(180deg, #F5FFF9 0%, #A7B5AD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glow Utilities */
+.emerald-glow {
+  box-shadow: 0 0 25px -4px rgba(0, 230, 160, 0.35);
+}
+
+.emerald-glow-lg {
+  box-shadow: 0 0 50px -10px rgba(0, 230, 160, 0.4);
+}
+
+.emerald-glow-sm {
+  box-shadow: 0 0 14px -2px rgba(0, 230, 160, 0.3);
+}
+
+.emerald-border-glow {
+  border-color: rgba(0, 230, 160, 0.5);
+  box-shadow: 0 0 15px rgba(0, 230, 160, 0.25);
+}
+
+/* Scanline / Grid Background */
+.bg-grid-pattern {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 230, 160, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 230, 160, 0.035) 1px, transparent 1px);
+}
+
+.bg-radial-vignette {
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(5, 7, 6, 0.8) 75%, #050706 100%);
+}
+
+/* Pulse animation for status nodes */
+@keyframes emeraldPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 0 0 rgba(0, 230, 160, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 0 16px 4px rgba(0, 230, 160, 0.4);
+  }
+}
+
+.animate-emerald-pulse {
+  animation: emeraldPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Magnetic Button helper */
+.magnetic-btn {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
 }

@@ -1,0 +1,18 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050706"/>
+  <rect x="20" y="20" width="1160" height="590" rx="24" fill="#0B100D" stroke="#00E6A0" stroke-opacity="0.25" stroke-width="2"/>
+  
+  <!-- Subtle emerald glow orb -->
+  <circle cx="950" cy="315" r="220" fill="#00E6A0" fill-opacity="0.08" filter="blur(60px)"/>
+  <circle cx="950" cy="315" r="140" stroke="#00E6A0" stroke-opacity="0.4" stroke-width="2"/>
+  <circle cx="950" cy="315" r="180" stroke="#8BFFD5" stroke-opacity="0.2" stroke-width="1.5" stroke-dasharray="8 8"/>
+  
+  <text x="120" y="240" fill="#00E6A0" font-family="monospace" font-size="20" letter-spacing="4">B.TECH AI &amp; MACHINE LEARNING</text>
+  <text x="120" y="320" fill="#F5FFF9" font-family="system-ui, sans-serif" font-weight="900" font-size="54" letter-spacing="-1">TADIKAMALLA VENKATA</text>
+  <text x="120" y="390" fill="#8BFFD5" font-family="system-ui, sans-serif" font-weight="900" font-size="54" letter-spacing="-1">SAI CHANDU</text>
+  
+  <text x="120" y="460" fill="#A7B5AD" font-family="system-ui, sans-serif" font-size="24">Interactive 3D Glassmorphism Portfolio • Obsidian × Emerald</text>
+  
+  <rect x="120" y="500" width="220" height="42" rx="21" fill="#00E6A0"/>
+  <text x="230" y="527" fill="#050706" font-family="system-ui, sans-serif" font-weight="bold" font-size="16" text-anchor="middle">EXPLORE DIGITAL WORK</text>
+</svg>
