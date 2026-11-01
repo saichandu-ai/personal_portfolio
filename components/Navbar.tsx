@@ -2,7 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sparkles } from "lucide-react";
+import {
+  Home,
+  User,
+  GraduationCap,
+  Code,
+  Folder,
+  Rocket,
+  Mail,
+  Menu,
+  X,
+  Sparkles,
+} from "lucide-react";
 import { SocialButton } from "./ui/BrandIcons";
 import { portfolioData } from "@/data/portfolio";
 import { useScene, SectionId } from "./3d/SceneContext";
@@ -10,20 +21,21 @@ import { useScene, SectionId } from "./3d/SceneContext";
 interface NavItem {
   id: SectionId;
   label: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const navItems: NavItem[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "education", label: "Education" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Projects" },
-  { id: "journey", label: "Journey" },
-  { id: "contact", label: "Contact" },
+  { id: "home", label: "Home", icon: Home },
+  { id: "about", label: "About", icon: User },
+  { id: "education", label: "Education", icon: GraduationCap },
+  { id: "skills", label: "Skills", icon: Code },
+  { id: "projects", label: "Projects", icon: Folder },
+  { id: "journey", label: "Journey", icon: Rocket },
+  { id: "contact", label: "Contact", icon: Mail },
 ];
 
 export function Navbar() {
-  const { activeSection, setActiveSection } = useScene();
+  const { activeSection, navigateToSection } = useScene();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -35,13 +47,9 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (id: SectionId) => {
-    setActiveSection(id);
+  const handleNavClick = (id: SectionId) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    navigateToSection(id);
   };
 
   return (
@@ -60,9 +68,9 @@ export function Navbar() {
           {/* Brand Logo / Monogram */}
           <button
             type="button"
-            onClick={() => scrollToSection("home")}
+            onClick={() => handleNavClick("home")}
             className="flex items-center gap-2 group text-left cursor-pointer focus:outline-none"
-            aria-label="Scroll to top"
+            aria-label="Navigate to Home section"
           >
             <div className="w-8 h-8 rounded-full glass-surface border border-[rgba(0,230,160,0.3)] flex items-center justify-center group-hover:border-[rgba(0,230,160,0.7)] group-hover:shadow-[0_0_12px_rgba(0,230,160,0.4)] transition-all duration-300">
               <span className="font-mono text-xs font-bold text-[#00E6A0]">SC</span>
@@ -77,16 +85,17 @@ export function Navbar() {
             </div>
           </button>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links with Icons Before Labels */}
           <div className="hidden md:flex items-center gap-1 relative p-1 rounded-full bg-[rgba(255,255,255,0.03)] border border-[rgba(0,230,160,0.1)]">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
+              const IconComponent = item.icon;
               return (
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className={`relative px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-200 z-10 rounded-full cursor-pointer focus:outline-none ${
+                  onClick={() => handleNavClick(item.id)}
+                  className={`group relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium tracking-wide transition-colors duration-200 z-10 rounded-full cursor-pointer focus:outline-none ${
                     isActive
                       ? "text-[#050706] font-semibold"
                       : "text-[#A7B5AD] hover:text-[#F5FFF9]"
@@ -99,7 +108,12 @@ export function Navbar() {
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
-                  {item.label}
+                  <IconComponent
+                    className={`w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 ${
+                      isActive ? "text-[#050706]" : "text-[#A7B5AD] group-hover:text-[#00E6A0]"
+                    }`}
+                  />
+                  <span>{item.label}</span>
                 </button>
               );
             })}
@@ -111,18 +125,20 @@ export function Navbar() {
               href={portfolioData.personal.social.linkedin}
               label="LinkedIn"
               size="sm"
+              placement="bottom"
             />
             <SocialButton
               href={portfolioData.personal.social.github}
               label="GitHub"
               size="sm"
+              placement="bottom"
             />
 
             {/* Mobile Menu Toggle */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-9 h-9 rounded-full flex items-center justify-center glass-surface border border-[rgba(0,230,160,0.22)] text-[#F5FFF9] hover:text-[#00E6A0] hover:border-[rgba(0,230,160,0.6)] transition-all ml-1"
+              className="md:hidden w-9 h-9 rounded-full flex items-center justify-center glass-surface border border-[rgba(0,230,160,0.22)] text-[#F5FFF9] hover:text-[#00E6A0] hover:border-[rgba(0,230,160,0.6)] transition-all ml-1 cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -144,18 +160,26 @@ export function Navbar() {
             <div className="flex flex-col gap-1.5">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
+                const IconComponent = item.icon;
                 return (
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => scrollToSection(item.id)}
-                    className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium tracking-wide transition-all ${
+                    onClick={() => handleNavClick(item.id)}
+                    className={`group flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium tracking-wide transition-all cursor-pointer ${
                       isActive
                         ? "bg-gradient-to-r from-[#00E6A0]/20 to-transparent text-[#00E6A0] border-l-2 border-[#00E6A0]"
                         : "text-[#A7B5AD] hover:text-[#F5FFF9] hover:bg-[rgba(255,255,255,0.03)]"
                     }`}
                   >
-                    <span>{item.label}</span>
+                    <div className="flex items-center gap-2.5">
+                      <IconComponent
+                        className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${
+                          isActive ? "text-[#00E6A0]" : "text-[#A7B5AD] group-hover:text-[#00E6A0]"
+                        }`}
+                      />
+                      <span>{item.label}</span>
+                    </div>
                     {isActive && <Sparkles className="w-3.5 h-3.5 text-[#00E6A0]" />}
                   </button>
                 );
@@ -169,11 +193,13 @@ export function Navbar() {
                   href={portfolioData.personal.social.linkedin}
                   label="LinkedIn"
                   size="sm"
+                  placement="bottom"
                 />
                 <SocialButton
                   href={portfolioData.personal.social.github}
                   label="GitHub"
                   size="sm"
+                  placement="bottom"
                 />
               </div>
             </div>
@@ -183,4 +209,3 @@ export function Navbar() {
     </>
   );
 }
-
