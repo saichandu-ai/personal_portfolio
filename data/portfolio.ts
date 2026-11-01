@@ -102,7 +102,7 @@ export const portfolioData: PortfolioData = {
     description:
       "Exploring Artificial Intelligence, Machine Learning and software development while transforming ideas into meaningful digital experiences.",
     email: "saichandutadikamalla@gmail.com",
-    location: "Jonnalagadda / Chilakaluripeta, Andhra Pradesh, India",
+    location: "Chilakaluripeta, Andhra Pradesh, India",
     social: {
       linkedin: "https://www.linkedin.com/in/saichandutadikamalla",
       github: "https://github.com/saichandu-ai",

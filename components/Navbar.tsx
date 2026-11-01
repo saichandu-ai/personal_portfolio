@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
 ];
 
 export function Navbar() {
-  const { activeSection, navigateToSection } = useScene();
+  const { activeSection, setActiveSection } = useScene();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -35,9 +35,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (id: SectionId) => {
+  const scrollToSection = (id: SectionId) => {
+    setActiveSection(id);
     setMobileMenuOpen(false);
-    navigateToSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -56,9 +60,9 @@ export function Navbar() {
           {/* Brand Logo / Monogram */}
           <button
             type="button"
-            onClick={() => handleNavClick("home")}
+            onClick={() => scrollToSection("home")}
             className="flex items-center gap-2 group text-left cursor-pointer focus:outline-none"
-            aria-label="Navigate to Home section"
+            aria-label="Scroll to top"
           >
             <div className="w-8 h-8 rounded-full glass-surface border border-[rgba(0,230,160,0.3)] flex items-center justify-center group-hover:border-[rgba(0,230,160,0.7)] group-hover:shadow-[0_0_12px_rgba(0,230,160,0.4)] transition-all duration-300">
               <span className="font-mono text-xs font-bold text-[#00E6A0]">SC</span>
@@ -81,7 +85,7 @@ export function Navbar() {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => handleNavClick(item.id)}
+                  onClick={() => scrollToSection(item.id)}
                   className={`relative px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors duration-200 z-10 rounded-full cursor-pointer focus:outline-none ${
                     isActive
                       ? "text-[#050706] font-semibold"
@@ -107,13 +111,11 @@ export function Navbar() {
               href={portfolioData.personal.social.linkedin}
               label="LinkedIn"
               size="sm"
-              placement="bottom"
             />
             <SocialButton
               href={portfolioData.personal.social.github}
               label="GitHub"
               size="sm"
-              placement="bottom"
             />
 
             {/* Mobile Menu Toggle */}
@@ -146,7 +148,7 @@ export function Navbar() {
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => handleNavClick(item.id)}
+                    onClick={() => scrollToSection(item.id)}
                     className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium tracking-wide transition-all ${
                       isActive
                         ? "bg-gradient-to-r from-[#00E6A0]/20 to-transparent text-[#00E6A0] border-l-2 border-[#00E6A0]"
@@ -167,13 +169,11 @@ export function Navbar() {
                   href={portfolioData.personal.social.linkedin}
                   label="LinkedIn"
                   size="sm"
-                  placement="bottom"
                 />
                 <SocialButton
                   href={portfolioData.personal.social.github}
                   label="GitHub"
                   size="sm"
-                  placement="bottom"
                 />
               </div>
             </div>

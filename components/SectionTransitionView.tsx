@@ -40,7 +40,7 @@ export function SectionTransitionView() {
   const { activeSection, direction, prefersReducedMotion } = useScene();
 
   return (
-    <div className="relative w-full flex-1 flex flex-col justify-start overflow-x-hidden min-h-[calc(100vh-160px)]">
+    <div className="relative w-full flex-1 flex flex-col justify-start overflow-x-hidden min-h-[calc(100vh-160px)] px-2 sm:px-4 md:px-6">
       <AnimatePresence mode="wait" custom={direction} initial={false}>
         <motion.div
           key={activeSection}
@@ -51,7 +51,10 @@ export function SectionTransitionView() {
           exit="exit"
           className="w-full flex-1 flex flex-col justify-start"
         >
-          {renderSection(activeSection)}
+          {/* Subtle Premium Section Hover Pop-Up & Emerald Glow Wrapper */}
+          <div className="section-hover-pop w-full flex-1 flex flex-col justify-start">
+            {renderSection(activeSection)}
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

@@ -21,7 +21,7 @@ export const sectionTransitionVariants: Variants = {
     scale: 1,
     filter: "blur(0px)",
     transition: {
-      x: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+      x: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
       opacity: { duration: 0.65, ease: "easeOut" },
       scale: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
       filter: { duration: 0.5 },

@@ -162,3 +162,27 @@
   position: relative;
   transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
 }
+
+/* Premium Section Hover Pop-Up Effect */
+@media (hover: hover) and (pointer: fine) {
+  .section-hover-pop {
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center center;
+    border-radius: 1.5rem;
+    border: 1px solid transparent;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .section-hover-pop:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 55px -10px rgba(0, 230, 160, 0.22),
+                0 0 100px -25px rgba(0, 230, 160, 0.12),
+                inset 0 0 30px -15px rgba(0, 230, 160, 0.08);
+    border-color: rgba(0, 230, 160, 0.22);
+  }
+}

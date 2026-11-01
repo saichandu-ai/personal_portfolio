@@ -29,7 +29,7 @@ export function Footer() {
 
         {/* Official Brand Social Icons */}
         <div className="flex items-center gap-3">
-          <SocialGroup size="md" placement="top" />
+          <SocialGroup size="md" />
         </div>
 
         {/* Copyright & Back to Top */}

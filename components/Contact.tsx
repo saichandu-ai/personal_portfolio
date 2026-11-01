@@ -159,7 +159,7 @@ export function Contact() {
                 <span className="block text-xs font-mono uppercase tracking-wider text-[#A7B5AD] mb-3">
                   Connect On Official Networks
                 </span>
-                <SocialGroup size="md" placement="top" />
+                <SocialGroup size="md" />
               </div>
             </GlassCard>
 

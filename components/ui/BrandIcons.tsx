@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, X, CheckCircle2 } from "lucide-react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 interface SocialIconProps {
-  href?: string;
-  label: "LinkedIn" | "GitHub" | string;
+  href: string;
+  label: string;
   size?: "sm" | "md" | "lg";
   className?: string;
   showTooltip?: boolean;
-  placement?: "top" | "bottom" | "auto";
 }
 
 export function LinkedInIcon({ className = "w-5 h-5 fill-current" }: { className?: string }) {
@@ -43,113 +41,15 @@ export function GitHubIcon({ className = "w-5 h-5 fill-current" }: { className?:
   );
 }
 
-// Data specifications for social media popups
-const SOCIAL_PROFILES = {
-  linkedin: {
-    platform: "LinkedIn",
-    profileName: "TADIKAMALLA VENKATA SAI CHANDU",
-    tagline: "B.Tech Artificial Intelligence & Machine Learning Student",
-    url: "https://www.linkedin.com/in/saichandutadikamalla",
-    buttonText: "Visit LinkedIn Profile",
-    description:
-      "Connect for professional collaborations, AI/ML research, and software engineering opportunities.",
-    stats: "Tirumala Engineering College • 2024–2028",
-  },
-  github: {
-    platform: "GitHub",
-    profileName: "saichandu-ai",
-    tagline: "Developer & Open Source Contributor",
-    url: "https://github.com/saichandu-ai",
-    buttonText: "Visit GitHub Profile",
-    description:
-      "Explore open-source repositories, algorithms, AI/ML models, and interactive WebGL project codebases.",
-    stats: "AI/ML • Python • WebGL • TypeScript",
-  },
-};
-
 export function SocialButton({
   href,
   label,
   size = "md",
   className = "",
   showTooltip = true,
-  placement = "auto",
 }: SocialIconProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [computedPlacement, setComputedPlacement] = useState<"top" | "bottom">("bottom");
-  const [horizontalAlign, setHorizontalAlign] = useState<"center" | "right" | "left">("center");
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
-
   const isLinkedIn = label.toLowerCase().includes("linkedin");
-  const profileData = isLinkedIn ? SOCIAL_PROFILES.linkedin : SOCIAL_PROFILES.github;
-  const targetUrl = href || profileData.url;
-
-  // Determine smart placement based on screen position
-  const calculatePosition = useCallback(() => {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-
-    if (placement === "top") {
-      setComputedPlacement("top");
-    } else if (placement === "bottom") {
-      setComputedPlacement("bottom");
-    } else {
-      // Auto: if near bottom half of viewport, open top; otherwise open bottom
-      if (rect.bottom > window.innerHeight - 280) {
-        setComputedPlacement("top");
-      } else {
-        setComputedPlacement("bottom");
-      }
-    }
-
-    // Horizontal alignment check (prevent right/left edge clipping)
-    if (rect.right > window.innerWidth - 160) {
-      setHorizontalAlign("right");
-    } else if (rect.left < 160) {
-      setHorizontalAlign("left");
-    } else {
-      setHorizontalAlign("center");
-    }
-  }, [placement]);
-
-  const togglePopup = () => {
-    calculatePosition();
-    setIsPopupOpen((prev) => !prev);
-  };
-
-  const closePopup = useCallback(() => {
-    setIsPopupOpen(false);
-  }, []);
-
-  // Handle outside click & Escape key
-  useEffect(() => {
-    if (!isPopupOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        closePopup();
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closePopup();
-        triggerRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isPopupOpen, closePopup]);
 
   const sizeClasses = {
     sm: "w-9 h-9 text-sm",
@@ -163,179 +63,46 @@ export function SocialButton({
     lg: "w-6 h-6",
   };
 
-  // Compute popup alignment classes
-  const getHorizontalClasses = () => {
-    if (horizontalAlign === "right") return "right-0 translate-x-0";
-    if (horizontalAlign === "left") return "left-0 translate-x-0";
-    return "left-1/2 -translate-x-1/2";
-  };
-
   return (
-    <div ref={containerRef} className="relative inline-block">
-      {/* Interactive Trigger Button */}
-      <motion.button
-        ref={triggerRef}
-        type="button"
-        onClick={togglePopup}
-        onMouseEnter={() => {
-          setIsHovered(true);
-          calculatePosition();
-        }}
+    <div className="relative inline-block">
+      <motion.a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={label}
+        onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        aria-label={`${label} profile options and popup card`}
-        aria-expanded={isPopupOpen}
-        aria-haspopup="dialog"
         whileHover={{
           scale: 1.12,
           y: -2,
         }}
         whileTap={{ scale: 0.94 }}
         transition={{ type: "spring", stiffness: 400, damping: 18 }}
-        className={`group relative flex items-center justify-center rounded-full glass-surface border border-[rgba(0,230,160,0.22)] text-[#F5FFF9] hover:text-[#00E6A0] hover:border-[rgba(0,230,160,0.65)] hover:shadow-[0_0_24px_rgba(0,230,160,0.4)] transition-all duration-300 backdrop-blur-xl cursor-pointer ${sizeClasses[size]} ${
-          isPopupOpen ? "border-[#00E6A0] shadow-[0_0_24px_rgba(0,230,160,0.45)] text-[#00E6A0]" : ""
-        } ${className}`}
+        className={`group relative flex items-center justify-center rounded-full glass-surface border border-[rgba(0,230,160,0.22)] text-[#F5FFF9] hover:text-[#00E6A0] hover:border-[rgba(0,230,160,0.65)] hover:shadow-[0_0_24px_rgba(0,230,160,0.4)] transition-all duration-300 backdrop-blur-xl ${sizeClasses[size]} ${className}`}
       >
         {/* Subtle radial inner glow on hover */}
-        <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-[rgba(0,230,160,0.2)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-[rgba(0,230,160,0.15)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
         {isLinkedIn ? (
           <LinkedInIcon className={`${iconSizes[size]} transition-transform duration-300 group-hover:scale-110`} />
         ) : (
           <GitHubIcon className={`${iconSizes[size]} transition-transform duration-300 group-hover:scale-110`} />
         )}
-      </motion.button>
+      </motion.a>
 
-      {/* 1. Animated Hover Tooltip (Suppressed when popup is open) */}
-      <AnimatePresence>
-        {showTooltip && isHovered && !isPopupOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: computedPlacement === "top" ? -6 : 6, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: computedPlacement === "top" ? -6 : 6, scale: 0.92 }}
-            transition={{ duration: 0.18 }}
-            className={`absolute pointer-events-none z-50 whitespace-nowrap px-2.5 py-1 text-[11px] font-medium tracking-wide text-[#F5FFF9] bg-[#0B100D]/95 border border-[rgba(0,230,160,0.35)] rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.6)] backdrop-blur-md ${getHorizontalClasses()} ${
-              computedPlacement === "top" ? "-top-9" : "-bottom-9"
-            }`}
-          >
-            {label}
-            <div
-              className={`absolute w-2 h-2 rotate-45 bg-[#0B100D] ${
-                computedPlacement === "top"
-                  ? "-bottom-1 border-b border-r border-[rgba(0,230,160,0.35)]"
-                  : "-top-1 border-t border-l border-[rgba(0,230,160,0.35)]"
-              } ${horizontalAlign === "right" ? "right-3" : horizontalAlign === "left" ? "left-3" : "left-1/2 -translate-x-1/2"}`}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 2. Clickable Floating Glassmorphism Popup */}
-      <AnimatePresence>
-        {isPopupOpen && (
-          <motion.div
-            ref={popupRef}
-            role="dialog"
-            aria-label={`${label} profile overview`}
-            initial={{
-              opacity: 0,
-              scale: 0.9,
-              y: computedPlacement === "top" ? -12 : 12,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              scale: 0.92,
-              y: computedPlacement === "top" ? -10 : 10,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 380,
-              damping: 24,
-            }}
-            className={`absolute z-50 w-[295px] sm:w-[325px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl bg-[#0B100D]/95 border border-[rgba(0,230,160,0.38)] shadow-[0_22px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(0,230,160,0.22)] backdrop-blur-2xl p-5 text-left ${getHorizontalClasses()} ${
-              computedPlacement === "top" ? "bottom-full mb-3" : "top-full mt-3"
-            }`}
-          >
-            {/* Ambient top glowing line */}
-            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#00E6A0] to-transparent opacity-90" />
-
-            {/* Header: Platform Icon, Name & Close Button */}
-            <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-[rgba(0,230,160,0.16)]">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full glass-surface border border-[rgba(0,230,160,0.4)] flex items-center justify-center text-[#00E6A0] shadow-[0_0_12px_rgba(0,230,160,0.25)]">
-                  {isLinkedIn ? (
-                    <LinkedInIcon className="w-4 h-4" />
-                  ) : (
-                    <GitHubIcon className="w-4 h-4" />
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#F5FFF9] tracking-wide">
-                    {profileData.platform}
-                  </h4>
-                  <div className="flex items-center gap-1 text-[10px] font-mono text-[#00E6A0]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00E6A0] animate-emerald-pulse" />
-                    <span>Official Profile</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={closePopup}
-                aria-label={`Close ${label} popup`}
-                className="w-7 h-7 rounded-full flex items-center justify-center glass-surface border border-[rgba(0,230,160,0.2)] text-[#A7B5AD] hover:text-[#00E6A0] hover:border-[rgba(0,230,160,0.6)] transition-all cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Profile Identity & Tagline */}
-            <div className="mb-3 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#F5FFF9] tracking-wide">
-                  {profileData.profileName}
-                </span>
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#00E6A0]" />
-              </div>
-              <p className="text-[11px] font-mono text-[#8BFFD5]">
-                {profileData.tagline}
-              </p>
-            </div>
-
-            {/* Short Description */}
-            <p className="text-xs text-[#A7B5AD] leading-relaxed mb-4 font-light">
-              {profileData.description}
-            </p>
-
-            {/* Profile Visit Button */}
-            <a
-              href={targetUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={closePopup}
-              className="group/btn relative w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00E6A0] to-[#087F5B] text-[#050706] font-semibold text-xs tracking-wide shadow-[0_0_20px_rgba(0,230,160,0.35)] hover:shadow-[0_0_28px_rgba(0,230,160,0.6)] hover:border-[rgba(255,255,255,0.7)] transition-all duration-300"
-            >
-              <span>{profileData.buttonText}</span>
-              <ExternalLink className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
-            </a>
-
-            {/* Pointer notch */}
-            <div
-              className={`absolute w-3 h-3 rotate-45 bg-[#0B100D] ${
-                computedPlacement === "top"
-                  ? "-bottom-1.5 border-b border-r border-[rgba(0,230,160,0.38)]"
-                  : "-top-1.5 border-t border-l border-[rgba(0,230,160,0.38)]"
-              } ${horizontalAlign === "right" ? "right-4" : horizontalAlign === "left" ? "left-4" : "left-1/2 -translate-x-1/2"}`}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Floating Tooltip */}
+      {showTooltip && isHovered && (
+        <motion.div
+          initial={{ opacity: 0, y: 6, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 6, scale: 0.92 }}
+          transition={{ duration: 0.18 }}
+          className="absolute left-1/2 -translate-x-1/2 -bottom-9 pointer-events-none z-50 whitespace-nowrap px-2.5 py-1 text-[11px] font-medium tracking-wide text-[#F5FFF9] bg-[#0B100D]/95 border border-[rgba(0,230,160,0.35)] rounded-md shadow-[0_4px_16px_rgba(0,0,0,0.6)] backdrop-blur-md"
+        >
+          {label}
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-[#0B100D] border-t border-l border-[rgba(0,230,160,0.35)]" />
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -344,12 +111,10 @@ export function SocialGroup({
   size = "md",
   className = "",
   showTooltip = true,
-  placement = "auto",
 }: {
   size?: "sm" | "md" | "lg";
   className?: string;
   showTooltip?: boolean;
-  placement?: "top" | "bottom" | "auto";
 }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
@@ -358,15 +123,14 @@ export function SocialGroup({
         label="LinkedIn"
         size={size}
         showTooltip={showTooltip}
-        placement={placement}
       />
       <SocialButton
         href="https://github.com/saichandu-ai"
         label="GitHub"
         size={size}
         showTooltip={showTooltip}
-        placement={placement}
       />
     </div>
   );
 }
+

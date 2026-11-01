@@ -5,8 +5,14 @@ import dynamic from "next/dynamic";
 import { SceneProvider } from "@/components/3d/SceneContext";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navbar } from "@/components/Navbar";
-import { SectionTransitionView } from "@/components/SectionTransitionView";
-import { SectionPaginationDock } from "@/components/ui/SectionPaginationDock";
+import { Hero } from "@/components/Hero";
+import { About } from "@/components/About";
+import { Education } from "@/components/Education";
+import { Skills } from "@/components/Skills";
+import { Projects } from "@/components/Projects";
+import { Certifications } from "@/components/Certifications";
+import { Journey } from "@/components/Journey";
+import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
 // Dynamically import Three.js background with ssr: false to prevent hydration mismatches
@@ -29,10 +35,16 @@ export default function Home() {
       {/* Main Portfolio Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-1 flex flex-col justify-start pt-16">
-          <SectionTransitionView />
+        <main className="flex-1">
+          <Hero />
+          <About />
+          <Education />
+          <Skills />
+          <Projects />
+          <Certifications />
+          <Journey />
+          <Contact />
         </main>
-        <SectionPaginationDock />
         <Footer />
       </div>
     </SceneProvider>
